@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Case study — Klim Tertychnyi</title>
+  <meta name="description" content="A case study from the portfolio of Klim Tertychnyi, AI Content Producer.">
+  <meta name="theme-color" content="#EDEBE4">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Case study — Klim Tertychnyi">
+  <meta property="og:description" content="A case study from the portfolio of Klim Tertychnyi, AI Content Producer.">
+  <meta property="og:image" content="https://avalakxx.github.io/assets/img/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&family=Caveat:wght@500;600&display=swap">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/case.css">
+</head>
+<body class="page-case" data-theme="paper">
+  <!-- Content is hidden until js/case.js has set the side's theme
+       (paper / film), so Side B pages never flash paper. Failsafe: 4 s. -->
+  <script>
+    document.documentElement.classList.add('cs-wait');
+    setTimeout(function () { document.documentElement.classList.remove('cs-wait'); }, 4000);
+  </script>
+
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+
+  <main id="main" tabindex="-1">
+    <noscript>
+      <p class="noscript">This portfolio is rendered with JavaScript. Klim Tertychnyi, AI Content Producer. Email: <a href="mailto:tertychnyiklim@gmail.com">tertychnyiklim@gmail.com</a> · <a href="index.html">Home</a></p>
+    </noscript>
+    <article id="case" class="case"></article>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="content/site.js" defer></script>
+  <script src="content/site.uk.js" defer></script>
+  <script src="content/i18n.js" defer></script>
+  <script src="js/core.js" defer></script>
+  <script src="js/case.js" defer></script>
+</body>
+</html>

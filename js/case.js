@@ -616,11 +616,10 @@
     var items = arr(b.items).filter(function (x) { return x && has(x.value); });
     if (!items.length) return null;
     var ol = h('ol', { class: 'cs-metrics', 'data-n': Math.min(items.length, 4) });
-    var marked = false;
+    // --len = longest value: CSS shrinks every number in the strip equally so the longest (e.g. "330–500") fits its column
+    ol.style.setProperty('--len', Math.max.apply(null, [4].concat(items.map(function (it) { return String(KT.plain ? KT.plain(it.value) : it.value).length; }))));
     items.forEach(function (it, i) {
-      var pen = !marked && !isTodo(it.value);
-      var val = valueEl(it.value, 'cs-metric__val', pen);
-      if (pen) { marked = true; val._in.appendChild(KT.pencil('underline', { variant: 1, delay: 900 })); }
+      var val = valueEl(it.value, 'cs-metric__val', false);
       var li = h('li', { class: 'cs-metric', 'data-reveal': 'up', 'data-reveal-delay': i * 90 },
         h('span', { class: 'label label--accent cs-metric__no', 'aria-hidden': 'true', text: KT.pad(i + 1) }),
         val,

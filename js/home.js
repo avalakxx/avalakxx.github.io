@@ -388,8 +388,7 @@
     var ol = h('ol', { class: 'stats__row' });
     list.forEach(function (s, i) {
       var val = h('span', { class: 'stat__val', text: s.value || '' });
-      var fig = h('span', { class: 'stat__fig fit__inner' + (i === 0 ? ' has-pencil' : '') }, val);
-      if (i === 0) fig.appendChild(KT.pencil('underline', { variant: 1, delay: 900 }));
+      var fig = h('span', { class: 'stat__fig fit__inner' }, val);
       var li = h('li', { class: 'stat', 'data-reveal': 'up', 'data-reveal-delay': i * 90 },
         h('span', { class: 'stat__no label', 'aria-hidden': 'true', text: s.frame || KT.pad(i + 1) }),
         h('p', { class: 'stat__num t-display fit' }, fig),

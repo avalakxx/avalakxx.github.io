@@ -316,7 +316,10 @@ html.js:not(.reduced) .ch__title:not(.is-split) { visibility: hidden; }
 }
 .cs-metrics > .cs-metric:nth-child(4n + 1) { border-left: 0; padding-left: 0; }
 .cs-metrics > .cs-metric:nth-child(n + 5) { border-top: 1px solid var(--rule); }
-.cs-metric__val { align-self: end; align-self: last baseline; margin-top: 14px; margin-bottom: 14px; font-size: clamp(44px, 6vw, 112px); }
+.cs-metrics { container-type: inline-size; }
+/* one size for the whole strip: column width minus side padding, divided by the longest value (--len, set in case.js) */
+.cs-metric__val { align-self: end; align-self: last baseline; margin-top: 14px; margin-bottom: 14px; white-space: nowrap;
+  font-size: min(clamp(44px, 6vw, 112px), calc((100cqi / var(--mcols, 4) - 2 * clamp(14px, 1.6vw, 28px)) / (var(--len, 4) * 0.64))); }
 .cs-metric__label { align-self: start; color: var(--fg-2); font-size: clamp(15px, 1.1vw, 17px); line-height: 1.35; max-width: 26ch; }
 
 /* ---- before / after */

@@ -35,7 +35,7 @@ window.SITE = {
     cv: 'assets/docs/Klim_Tertychnyi_CV.pdf',
     portrait: 'assets/img/portrait.webp',
     // Turnaround: the same portrait from three angles (same size, light, background).
-    // Hero turns between them; the DIRECT THE SHOT toy lets the visitor pick one.
+    // Hero turns between them.
     // Missing angle → falls back to portrait.
     portraitAngles: {
       front: 'assets/img/portrait.webp',
@@ -77,24 +77,53 @@ window.SITE = {
       'I have worked hands-on with generative AI since 2023. For the last two years I have used it in commercial work for a web development agency, a record label and the vinyl shops Echo UA & Echo Hits: images, video, voice and copy for social media and ads.',
       'I also build the plumbing. I made the vinyl shops’ content pipeline from scratch, and I am now scripting the repetitive parts of my own video editing with Claude Code.'
     ],
-    toy: {
-      title: 'DIRECT THE SHOT',
-      hint: 'Your turn. Re-brief the portrait.',
-      modes: [
-        { id: 'raw', label: 'RAW', prompt: '/portrait --raw --film tri-x-400' },
-        { id: 'halftone', label: 'HALFTONE', prompt: '/portrait --print newsprint --dots 45lpi --ink black' },
-        { id: 'ascii', label: 'ASCII', prompt: '/portrait --render text --charset " .:-=+*#%@" --cols 120' },
-        { id: 'blueprint', label: 'BLUEPRINT', prompt: '/portrait --style blueprint --grid 8px --annotate "do not crop"' },
-        { id: 'threshold', label: 'THRESHOLD', prompt: '/portrait --contrast max --levels 2 --no-mercy' },
-        { id: 'pixel', label: 'PIXEL', prompt: '/portrait --downscale 48px --palette 4 --nearest' }
-      ],
-      // ANGLE control: picks the source photo (person.portraitAngles). 'default' is pre-selected.
-      angleLabel: 'ANGLE',
-      angleDefault: 'profile',
-      angles: [
-        { id: 'front', label: 'FRONT' },
-        { id: 'profile', label: 'PROFILE' },
-        { id: 'back', label: 'BACK' }
+    // BRIEF → RESULT: one tab per case, real material only (taken from cases.*).
+    // id: case id (tab label + case link). kind: what the left text really is.
+    // brief: text on the left; omitted → the case's PROMPT RECEIPT text.
+    // shape: optional output fragment under the brief. result: the shipped piece.
+    briefs: {
+      title: 'BRIEF → RESULT',
+      hint: 'What I asked for, and what shipped.',
+      tabsLabel: 'Pick a case',
+      resultLabel: 'RESULT',
+      link: 'See the case →',
+      items: [
+        {
+          id: 'wpwp', tab: 'wpwp',
+          kind: 'SCRIPT → ElevenLabs', // no written campaign brief exists: this is the voice-over script
+          result: { type: 'image', src: 'assets/img/cases/wpwp/landing-150-poster.jpg', alt: 'First frame of the $150 landing Reel: a turnkey landing page for $150 in two days', ratio: '9/16' },
+          line: 'The $150 landing Reel: the best performer of the 3-Reel campaign that brought 40+ qualified leads.'
+        },
+        {
+          id: 'vinyl', tab: 'vinyl',
+          kind: 'PROMPT → Claude Sonnet via API',
+          brief: `(excerpt, translated from Ukrainian)
+You are a copywriter for the Echo UA online shop, which sells vintage audio cassettes, CDs and vinyl on Prom.ua.
+From the data below, create the content for a product card.
+(…)
+- Do NOT write paragraphs about rarity, value to collectors, "a rare find" or similar wording about limited availability - Prom.ua blocks such content under its listing rules.
+- Write vividly, in a marketing style (as for collectors of vintage media), without bureaucratic phrasing and without invented facts that are not in the data above.
+
+Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
+(…)`,
+          shapeLabel: 'OUTPUT SHAPE, SHORTENED',
+          // keys from the prompt; values only as visible on the shipped card
+          shape: `{
+  "title_ua": "Coil – Swanyard (2CD, Reissue)",
+  "description_ua": "<p>…</p><p>«Swanyard» — масштабний архівний реліз легендарного британського гурту Coil…</p>…",
+  "description_ru": "…",
+  "genre_field": "Electronic",
+  …
+}`,
+          result: { type: 'image', src: 'assets/img/cases/vinyl/card-after.webp', alt: 'The shipped Prom.ua card for Coil – Swanyard (2CD, Reissue): full title, eight fields, three-paragraph description and tracklist', ratio: '900/1078' },
+          line: 'One feed run ships 50–100 records in about 15 minutes.'
+        },
+        {
+          id: 'tilkytak', tab: 'TILKYTAK',
+          kind: 'BRIEF → Claude Code',
+          result: { type: 'image', src: 'assets/img/cases/tilkytak/certificate-front.webp', alt: 'The final gift certificate front: black and white record photo, ₴3000 in a gradient block, GIFT CARD in a stepped grid', ratio: '1748/1240' },
+          line: '13 versions to a print-ready CMYK file.'
+        }
       ]
     }
   },

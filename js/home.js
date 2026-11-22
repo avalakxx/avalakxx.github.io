@@ -20,9 +20,9 @@
   KT.addStrings('en', { 'cv.open': 'Open CV (PDF) in a new tab', 'role': 'ROLE', 'read.case': 'Read case' });
   KT.addStrings('uk', { 'cv.open': 'Відкрити CV (PDF) у новій вкладці', 'role': 'РОЛЬ', 'read.case': 'Читати кейс' });
   KT.addStrings('uk', { 'job.full-time': 'повна зайнятість', 'job.part-time': 'часткова зайнятість', 'job.co-founder': 'співзасновник', 'job.freelance': 'фриланс' });
-  // portrait turnaround: alt suffix per angle, toy angle group label
-  KT.addStrings('en', { 'angle.front': 'front view', 'angle.profile': 'profile view', 'angle.back': 'view from behind', 'toy.angles': 'Camera angle' });
-  KT.addStrings('uk', { 'angle.front': 'анфас', 'angle.profile': 'у профіль', 'angle.back': 'зі спини', 'toy.angles': 'Ракурс камери' });
+  // portrait turnaround: alt suffix per angle
+  KT.addStrings('en', { 'angle.front': 'front view', 'angle.profile': 'profile view', 'angle.back': 'view from behind' });
+  KT.addStrings('uk', { 'angle.front': 'анфас', 'angle.profile': 'у профіль', 'angle.back': 'зі спини' });
 
   var ANGLES = ['front', 'profile', 'back'];
   // Source for one angle of the portrait; missing angle → the main portrait.
@@ -470,7 +470,10 @@
       })));
     }
     var grid = h('div', { class: 'about__grid grid' }, main);
-    if (A.toy && A.toy.modes && A.toy.modes.length) grid.appendChild(renderToy(A.toy));
+    if (A.briefs && A.briefs.items && A.briefs.items.length) {
+      var briefs = renderBriefs(A.briefs);
+      if (briefs) grid.appendChild(briefs);
+    }
     el.appendChild(grid);
 
     if (ANIM) motions.push(function () {
@@ -482,297 +485,108 @@
     });
   }
 
-  /* -------------------------------------------------- toy: direct the shot */
-  function renderToy(toy) {
-    var p = SITE.person || {}, modes0;
-    var aside = h('aside', { class: 'about__toy toy', 'aria-labelledby': 'toy-title' });
-    var head = h('div', { class: 'toy__head' },
-      h('h3', { class: 'label label--fg toy__title', id: 'toy-title', html: fmt(toy.title || '') }),
-      toy.hint ? h('p', { class: 'hand toy__hint', html: fmt(toy.hint) }) : null
+  /* ---------------------------------------------- brief → result (tabs) */
+  // One tab per case: the real brief / script / prompt on the left, the
+  // shipped piece on the right. No brief in the item → the case's PROMPT
+  // RECEIPT text (already translated by the UA overlay).
+  function casePrompt(id) {
+    var bs = (((SITE.cases || {})[id] || {}).blocks) || [];
+    for (var i = 0; i < bs.length; i++) if (bs[i] && bs[i].type === 'prompt') return bs[i];
+    return null;
+  }
+
+  function renderBriefs(B) {
+    var cases = SITE.cases || {};
+    var items = (B.items || []).filter(function (it) { return it && it.id && cases[it.id]; });
+    if (!items.length) return null;
+
+    var box = h('div', { class: 'about__briefs briefs', role: 'region', 'aria-labelledby': 'briefs-title' });
+    var head = h('div', { class: 'briefs__head' },
+      h('h3', { class: 'label label--fg briefs__title', id: 'briefs-title', html: fmt(B.title || '') }),
+      B.hint ? h('p', { class: 'hand briefs__hint', html: fmt(B.hint) }) : null
     );
-    var pname = KT.plain(p.name || 'KT');
-    modes0 = toy.modes[0] || {};
-    // ANGLE control: which photo of the turnaround the canvas renders
-    var angles = (toy.angles || []).filter(function (a) { return a && ANGLES.indexOf(a.id) > -1; });
-    var angle0 = angles.filter(function (a) { return a.id === toy.angleDefault; })[0] || angles[0] || { id: 'front' };
-    var canvas = h('canvas', { class: 'toy__canvas', role: 'img', 'aria-label': KT.t('portrait', null, { name: pname }) });
-    var img = h('img', { class: 'toy__img', alt: angleAlt(angle0.id), hidden: true, decoding: 'async' });
-    var stage = h('div', { class: 'frame__media toy__stage' }, canvas, img);
-    var cap = h('figcaption', { class: 'frame__cap' },
-      h('span', { class: 'frame__no', text: '17A' }),
-      h('span', { class: 'frame__txt toy__mode-label', text: '' })
-    );
-    var fig = h('figure', { class: 'frame toy__frame', style: { '--ratio': '3 / 4' } }, stage, cap);
-    var chips = h('div', { class: 'toy__modes', role: 'group', 'aria-label': KT.t('toy.modes') });
-    var angleBar = null;
-    if (angles.length > 1) {
-      angleBar = h('div', { class: 'toy__angles', role: 'group', 'aria-label': KT.t('toy.angles') },
-        h('span', { class: 'label toy__angles-label', 'aria-hidden': 'true', html: fmt(toy.angleLabel || 'ANGLE') }),
-        h('div', { class: 'toy__seg' }, angles.map(function (a) {
-          var b = h('button', { class: 'toy__seg-btn', type: 'button', 'aria-pressed': a.id === angle0.id ? 'true' : 'false', 'data-angle': a.id, html: fmt(a.label || a.id) });
-          b.addEventListener('click', function () { selectAngle(a); });
-          return b;
-        }))
+    var list = h('div', { class: 'briefs__tabs', role: 'tablist', 'aria-label': KT.plain(B.tabsLabel || B.title || '') });
+    var tabs = [], panels = [];
+
+    items.forEach(function (it, i) {
+      var c = cases[it.id], on = i === 0;
+      var tabId = 'brief-tab-' + it.id, panelId = 'brief-panel-' + it.id;
+      var tab = h('button', {
+        class: 'briefs__tab', type: 'button', role: 'tab', id: tabId,
+        'aria-selected': on ? 'true' : 'false', 'aria-controls': panelId, tabindex: on ? '0' : '-1'
+      },
+        c.track ? h('span', { class: 'briefs__tno', 'aria-hidden': 'true', text: c.track }) : null,
+        h('span', { class: 'briefs__tname', html: fmt(it.tab || it.id) })
       );
-    }
-    var typed = h('span', { class: 'toy__typed', 'aria-hidden': 'true' });
-    var srp = h('span', { class: 'sr-only', 'aria-live': 'polite' });
-    var prompt = h('p', { class: 'toy__prompt t-mono' },
-      h('span', { class: 'toy__ps', 'aria-hidden': 'true', text: '>' }), typed,
-      h('span', { class: 'toy__caret', 'aria-hidden': 'true' }), srp);
-    aside.append(head, fig, chips, angleBar || '', prompt);
+      tab.addEventListener('click', function () { select(i, false); });
+      tabs.push(tab);
+      list.appendChild(tab);
 
-    var modes = toy.modes;
-    var state = { mode: null, angle: angle0, images: {}, W: 0, H: 0, dpr: 1, lum: null, src: null, buf: null, tainted: false, ready: false, anim: null, typeT: null, loadId: 0 };
-    var ctx = canvas.getContext('2d');
+      var p = casePrompt(it.id) || {};
+      var text = KT.plain(it.brief || p.prompt || '');
+      var kind = KT.plain(it.kind || p.tool || '');
 
-    modes.forEach(function (m, i) {
-      var b = h('button', { class: 'chip', type: 'button', 'aria-pressed': i === 0 ? 'true' : 'false', 'data-mode': m.id, html: fmt(m.label || m.id) });
-      b.addEventListener('click', function () { select(m, true); });
-      chips.appendChild(b);
+      var slip = h('div', { class: 'briefs__slip' },
+        h('div', { class: 'briefs__slip-head' },
+          h('span', { text: kind }),
+          c.track ? h('span', { text: '№ ' + c.track }) : null),
+        // scrollable box: focusable so keyboard users can scroll it
+        h('pre', { class: 'briefs__text', tabindex: '0', 'aria-label': kind, text: text })
+      );
+      // paper wrapper carries the shadow; the slip itself is masked to a zigzag
+      var inCol = h('div', { class: 'briefs__in' }, h('div', { class: 'briefs__paper' }, slip));
+      if (it.shape) {
+        inCol.appendChild(h('div', { class: 'briefs__shape' },
+          h('span', { class: 'label briefs__k', html: fmt(it.shapeLabel || '') }),
+          h('pre', { class: 'briefs__code', tabindex: '0', 'aria-label': KT.plain(it.shapeLabel || ''), text: KT.plain(it.shape) })
+        ));
+      }
+
+      var outCol = h('div', { class: 'briefs__out' },
+        h('span', { class: 'label briefs__k', 'aria-hidden': 'true', html: fmt(B.resultLabel || '') }),
+        it.result ? KT.media(it.result, { className: 'briefs__media' }) : null,
+        it.line ? h('p', { class: 'briefs__line', html: fmt(it.line) }) : null,
+        h('a', {
+          class: 'briefs__link label label--fg', href: 'case.html?id=' + encodeURIComponent(it.id),
+          'aria-label': KT.plain(B.link || '').replace(/\s*→\s*$/, '') + ': ' + KT.plain(c.title || it.id),
+          html: fmt(B.link || '')
+        })
+      );
+
+      var panel = h('div', {
+        class: 'briefs__panel', role: 'tabpanel', id: panelId, 'aria-labelledby': tabId, tabindex: '0'
+      }, h('div', { class: 'briefs__flow' + (it.shape ? ' has-shape' : '') }, inCol,
+        h('span', { class: 'briefs__arrow', 'aria-hidden': 'true', text: '→' }), outCol));
+      if (!on) panel.hidden = true;
+      panels.push(panel);
     });
 
-    function curMode() { return modes.filter(function (m) { return m.id === state.mode; })[0] || modes0; }
-    function promptText() {
-      var t = KT.plain(curMode().prompt || '');
-      return angles.length ? t + ' --angle ' + state.angle.id : t;
-    }
-    // caption + accessible name for the current mode × angle
-    function labelShot() {
-      var m = curMode(), ml = KT.plain(m.label || m.id || '');
-      cap.lastChild.textContent = KT.t('toy.mode') + ' · ' + ml.toUpperCase() + (angles.length ? ' · ' + KT.plain(state.angle.label || state.angle.id).toUpperCase() : '');
-      canvas.setAttribute('aria-label', KT.t('toy.render', null, { name: pname, mode: ml.toLowerCase() }) + ', ' + KT.t('angle.' + state.angle.id));
-      img.alt = angleAlt(state.angle.id);
+    function select(i, focus) {
+      tabs.forEach(function (t, k) {
+        var on = k === i;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        panels[k].hidden = !on;
+      });
+      if (focus) tabs[i].focus();
     }
 
-    function selectAngle(a) {
-      if (state.angle.id === a.id) return;
-      state.angle = a;
-      if (angleBar) $$('.toy__seg-btn', angleBar).forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.angle === a.id ? 'true' : 'false'); });
-      labelShot();
-      typeOut(promptText());
-      if (state.booted) loadAngle(a.id, true);
-    }
+    // arrow keys move between tabs (automatic activation), Home/End jump
+    list.addEventListener('keydown', function (e) {
+      var i = tabs.indexOf(d.activeElement), n = tabs.length, to = -1;
+      if (i < 0) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') to = (i + 1) % n;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') to = (i - 1 + n) % n;
+      else if (e.key === 'Home') to = 0;
+      else if (e.key === 'End') to = n - 1;
+      if (to < 0) return;
+      e.preventDefault();
+      select(to, true);
+    });
 
-    // load (once) and switch the canvas source; stale loads are ignored
-    function loadAngle(id, animate) {
-      var my = ++state.loadId, src = angleSrc(id);
-      if (!src) return;
-      img.src = src; // file:// fallback shows the <img>
-      var use = function (image) {
-        if (my !== state.loadId) return;
-        state.image = image;
-        if (setup()) { state.ready = true; paint(animate); }
-      };
-      var cached = state.images[id];
-      if (cached && cached.complete && cached.naturalWidth) return use(cached);
-      var image = cached || (state.images[id] = new Image());
-      image.decoding = 'async';
-      image.onload = function () { use(image); };
-      if (!cached) image.src = src;
-    }
-
-    function typeOut(text) {
-      clearTimeout(state.typeT);
-      text = KT.plain(text || '');
-      srp.textContent = text;
-      if (KT.reduced) { typed.textContent = text; return; }
-      var i = 0;
-      typed.textContent = '';
-      (function tick() {
-        typed.textContent = text.slice(0, ++i);
-        if (i < text.length) state.typeT = setTimeout(tick, 16 + Math.random() * 22);
-      })();
-    }
-
-    function select(m, animate) {
-      if (state.mode === m.id && animate) return;
-      state.mode = m.id;
-      $$('.chip', chips).forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === m.id ? 'true' : 'false'); });
-      labelShot();
-      typeOut(promptText());
-      paint(animate);
-    }
-
-    /* ---- pixel work ---- */
-    var PAPER = [237, 235, 228], INK = [14, 14, 12], BLUE = [31, 53, 255];
-    function setup() {
-      var r = stage.getBoundingClientRect();
-      if (!r.width) return false;
-      state.dpr = Math.min(w.devicePixelRatio || 1, 2);
-      state.W = Math.round(r.width * state.dpr);
-      state.H = Math.round(r.height * state.dpr);
-      // resizing clears the canvas: skip it when only the source photo changes,
-      // so an angle switch wipes the new render over the old one
-      if (canvas.width !== state.W || canvas.height !== state.H) { canvas.width = state.W; canvas.height = state.H; }
-      var src = state.src = d.createElement('canvas');
-      src.width = state.W; src.height = state.H;
-      var sx = src.getContext('2d');
-      // cover-crop
-      var iw = state.image.naturalWidth, ih = state.image.naturalHeight;
-      var s = Math.max(state.W / iw, state.H / ih);
-      var dw = iw * s, dh = ih * s;
-      sx.drawImage(state.image, (state.W - dw) / 2, (state.H - dh) / 2, dw, dh);
-      state.buf = d.createElement('canvas');
-      state.buf.width = state.W; state.buf.height = state.H;
-      try {
-        var data = sx.getImageData(0, 0, state.W, state.H).data;
-        var lum = new Float32Array(state.W * state.H);
-        for (var i = 0, j = 0; i < lum.length; i++, j += 4) {
-          var L = (.2126 * data[j] + .7152 * data[j + 1] + .0722 * data[j + 2]) / 255;
-          lum[i] = clamp((L - .5) * 1.15 + .5, 0, 1);
-        }
-        state.lum = lum;
-        state.tainted = false;
-      } catch (e) {
-        state.tainted = true;
-      }
-      return true;
-    }
-
-    var R = {
-      raw: function (c) { c.drawImage(state.src, 0, 0); },
-      halftone: function (c) {
-        var W = state.W, H = state.H, lum = state.lum, cell = 6 * state.dpr;
-        c.fillStyle = 'rgb(' + PAPER + ')'; c.fillRect(0, 0, W, H);
-        c.fillStyle = 'rgb(' + INK + ')';
-        var cs = Math.SQRT1_2, diag = Math.hypot(W, H) / 2 + cell;
-        c.beginPath();
-        for (var v = -diag; v < diag; v += cell) {
-          for (var u = -diag; u < diag; u += cell) {
-            var x = (u - v) * cs + W / 2, y = (u + v) * cs + H / 2;
-            if (x < 0 || y < 0 || x >= W || y >= H) continue;
-            var L = lum[(y | 0) * W + (x | 0)];
-            var rad = cell * .5 * Math.sqrt(1 - L) * 1.22;
-            if (rad < .35) continue;
-            c.moveTo(x + rad, y);
-            c.arc(x, y, rad, 0, Math.PI * 2);
-          }
-        }
-        c.fill();
-      },
-      ascii: function (c) {
-        var W = state.W, H = state.H, lum = state.lum, ramp = ' .:-=+*#%@';
-        var fs = 9 * state.dpr, cw = fs * .62, ch = fs * 1.15;
-        c.fillStyle = 'rgb(' + PAPER + ')'; c.fillRect(0, 0, W, H);
-        c.fillStyle = 'rgb(' + INK + ')';
-        c.font = '500 ' + fs + 'px "JetBrains Mono", ui-monospace, monospace';
-        c.textBaseline = 'top';
-        for (var y = 0; y < H; y += ch) {
-          for (var x = 0; x < W; x += cw) {
-            var L = lum[(Math.min(H - 1, y + ch / 2) | 0) * W + (Math.min(W - 1, x + cw / 2) | 0)];
-            var k = Math.round((1 - L) * (ramp.length - 1));
-            if (k > 0) c.fillText(ramp[k], x, y);
-          }
-        }
-      },
-      blueprint: function (c) {
-        var W = state.W, H = state.H, lum = state.lum;
-        var img = c.createImageData(W, H), o = img.data;
-        for (var i = 0, j = 0; i < lum.length; i++, j += 4) {
-          var t = lum[i];
-          o[j] = BLUE[0] + (PAPER[0] - BLUE[0]) * t;
-          o[j + 1] = BLUE[1] + (PAPER[1] - BLUE[1]) * t;
-          o[j + 2] = BLUE[2] + (PAPER[2] - BLUE[2]) * t;
-          o[j + 3] = 255;
-        }
-        c.putImageData(img, 0, 0);
-        var step = 16 * state.dpr;
-        c.lineWidth = Math.max(1, state.dpr * .75);
-        [['rgba(237,235,228,.32)', 0], ['rgba(31,53,255,.16)', 0]].forEach(function (s) {
-          c.strokeStyle = s[0];
-          c.beginPath();
-          for (var x = step; x < W; x += step) { c.moveTo(x + .5, 0); c.lineTo(x + .5, H); }
-          for (var y = step; y < H; y += step) { c.moveTo(0, y + .5); c.lineTo(W, y + .5); }
-          c.stroke();
-        });
-      },
-      threshold: function (c) {
-        var W = state.W, H = state.H, lum = state.lum, dpr = state.dpr;
-        var B = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-        var img = c.createImageData(W, H), o = img.data;
-        for (var y = 0; y < H; y++) {
-          var by = ((y / dpr) | 0) & 3;
-          for (var x = 0; x < W; x++) {
-            var i = y * W + x, j = i * 4;
-            var bx = ((x / dpr) | 0) & 3;
-            var v = lum[i] + (B[by * 4 + bx] / 16 - .5) * .24;
-            var col = v > .5 ? PAPER : INK;
-            o[j] = col[0]; o[j + 1] = col[1]; o[j + 2] = col[2]; o[j + 3] = 255;
-          }
-        }
-        c.putImageData(img, 0, 0);
-      },
-      pixel: function (c) {
-        var W = state.W, H = state.H, lum = state.lum, b = Math.round(14 * state.dpr), levels = 6;
-        for (var y = 0; y < H; y += b) {
-          for (var x = 0; x < W; x += b) {
-            var s = 0, n = 0;
-            for (var yy = y + b * .2; yy < Math.min(H, y + b); yy += b * .3) {
-              for (var xx = x + b * .2; xx < Math.min(W, x + b); xx += b * .3) { s += lum[(yy | 0) * W + (xx | 0)]; n++; }
-            }
-            var L = n ? s / n : 1;
-            L = Math.round(L * (levels - 1)) / (levels - 1);
-            var v = Math.round(INK[0] + (PAPER[0] - INK[0]) * L);
-            c.fillStyle = 'rgb(' + v + ',' + v + ',' + (v - 4) + ')';
-            c.fillRect(x, y, b, b);
-          }
-        }
-      }
-    };
-
-    function paint(animate) {
-      if (!state.ready) return;
-      if (state.tainted) {
-        // file:// or cross-origin: CSS-filter approximation on an <img>
-        canvas.hidden = true;
-        img.hidden = false;
-        stage.dataset.mode = state.mode;
-        return;
-      }
-      var fn = R[state.mode] || R.raw;
-      var bc = state.buf.getContext('2d');
-      bc.clearRect(0, 0, state.W, state.H);
-      try { fn(bc); } catch (e) { R.raw(bc); }
-      if (state.anim) cancelAnimationFrame(state.anim);
-      if (!animate || KT.reduced) { ctx.drawImage(state.buf, 0, 0); return; }
-      var t0 = performance.now(), dur = 560, W = state.W, H = state.H, line = 2 * state.dpr;
-      (function step(now) {
-        var t = clamp((now - t0) / dur, 0, 1);
-        var e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        var y = Math.round(e * H);
-        if (y > 0) ctx.drawImage(state.buf, 0, 0, W, y, 0, 0, W, y);
-        if (t < 1) {
-          ctx.fillStyle = 'rgb(' + BLUE + ')';
-          ctx.fillRect(0, y, W, line);
-          state.anim = requestAnimationFrame(step);
-        } else {
-          ctx.drawImage(state.buf, 0, 0);
-          state.anim = null;
-        }
-      })(t0);
-    }
-
-    function bootToy() {
-      if (!angleSrc(state.angle.id)) return;
-      state.booted = true;
-      loadAngle(state.angle.id, false);
-      w.addEventListener('resize', KT.debounce(function () {
-        if (!state.image) return;
-        if (!state.ready) { if (setup()) { state.ready = true; paint(false); } return; }
-        var r = stage.getBoundingClientRect();
-        if (Math.round(r.width * state.dpr) === state.W) return;
-        if (setup()) paint(false);
-      }, 200));
-    }
-
-    state.mode = modes[0].id;
-    labelShot();
-    srp.textContent = promptText();
-    typed.textContent = promptText();
-    // render when the toy approaches the viewport (canvas work is one-off per mode)
-    KT.inView(aside, bootToy, { threshold: 0, rootMargin: '400px 0px' });
-    return aside;
+    box.append(head, list);
+    panels.forEach(function (p) { box.appendChild(p); });
+    return box;
   }
 
   /* ================================================================ WORK */

@@ -75,7 +75,7 @@ window.SITE = {
     statement: 'Generating is the easy part. *Choosing* is the job.',
     body: [
       'I have worked hands-on with generative AI since 2023. For the last two years I have used it in commercial work for a web development agency, a record label and the vinyl shops Echo UA & Echo Hits: images, video, voice and copy for social media and ads.',
-      'I also build the plumbing. I made the vinyl shops’ content pipeline from scratch, and I am now scripting the repetitive parts of my own video editing with Claude Code.'
+      'I also build the plumbing. I made the vinyl shops’ content pipeline from scratch, and I am now scripting the repetitive parts of my own video editing with Claude Code. Small data-analysis jobs I set for myself go to AI agents on a small OpenAI model: each one sends its report to Telegram, and I approve it or send it back.'
     ],
     // BRIEF → RESULT: one tab per case, real material only (taken from cases.*).
     // id: case id (tab label + case link). kind: what the left text really is.
@@ -769,7 +769,8 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
         items: [
           { name: 'n8n', use: 'Content pipelines, publishing' },
           { name: 'Claude Code', use: 'Pipelines, scripts, design iterations' },
-          { name: 'Codex', use: 'AI coding assistant' }
+          { name: 'Codex', use: 'AI coding assistant' },
+          { name: 'OpenAI (small model)', use: 'Data-analysis agents, reports to Telegram' }
         ]
       },
       {

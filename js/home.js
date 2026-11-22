@@ -107,12 +107,10 @@
     hero.photo = fig.querySelector('.frame__media');
     hero.imgs = hero.img ? [hero.img] : [];
     buildTurnaround(fig);
-    hero.circle = KT.pencil('circle', { auto: !ANIM, variant: 0, className: 'hero__circle', duration: 900 });
-    hero.arrow = KT.pencil('arrow', { auto: !ANIM, variant: 1, flip: 'xy', className: 'hero__arrow', duration: 420 });
-    hero.note = H.pencilNote ? h('span', { class: 'hand hero__hand', 'aria-hidden': 'true', html: fmt(H.pencilNote) }) : null;
-    // tagline: a blue-pencil caption by the portrait
-    var tagline = H.tagline ? h('p', { class: 'hand hero__tagline', html: fmt(H.tagline) }) : null;
-    shot.append(edge, fig, hero.circle, h('div', { class: 'hero__note' }, hero.arrow, hero.note));
+    // No pencil circle, arrow or handwritten notes on the hero portrait (removed at Klim's request).
+    hero.circle = null; hero.arrow = null; hero.note = null;
+    var tagline = null;
+    shot.append(edge, fig);
 
     // foot: role, level, one-liner, CTAs (See the work -> CV -> copy email)
     var actions = h('div', { class: 'hero__actions' },
@@ -321,8 +319,8 @@
         .to($$('.hero__rise', el), { yPercent: 0, duration: 1, stagger: .12 }, .2);
       if (hero.imgs.length) tl.to(hero.imgs, { filter: 'brightness(1) contrast(1) blur(0px)', scale: 1, duration: 1.05, ease: 'power2.out', clearProps: 'filter' }, .45);
       tl.to(heroIntroBlocks(el), { opacity: 1, y: 0, duration: .7, stagger: .06 }, .7)
-        .add(function () { hero.circle.draw(); }, .9)
-        .add(function () { hero.arrow.draw(); }, 1.3);
+        .add(function () { if (hero.circle) hero.circle.draw(); }, .9)
+        .add(function () { if (hero.arrow) hero.arrow.draw(); }, 1.3);
       if (hero.note) tl.to(hero.note, { opacity: 1, scale: 1, rotate: -6, duration: .55, ease: 'back.out(2.6)' }, 1.4);
     } else {
       finishIntro();

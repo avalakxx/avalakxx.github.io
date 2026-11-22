@@ -588,16 +588,18 @@
   /* ---- metrics */
   function countUp(txt, value, trigger, i) {
     var s = String(value);
-    if (!ANIM || /\s|\[\[/.test(s)) return;
-    var m = s.match(/^(.*?)(\d[\d,]*(?:\.\d+)?)(\D*)$/);
+    // group separators: "," (EN) or a no-break space (UA, see i18n.js)
+    if (!ANIM || /[ \t\n]|\[\[/.test(s)) return;
+    var m = s.match(/^(.*?)(\d[\d, ]*(?:\.\d+)?)(\D*)$/);
     if (!m) return;
-    var num = parseFloat(m[2].replace(/,/g, ''));
+    var num = parseFloat(m[2].replace(/[, ]/g, ''));
     if (!isFinite(num) || num <= 0) return;
-    var pre = m[1], suf = m[3], comma = /,/.test(m[2]), dec = (m[2].split('.')[1] || '').length;
-    var from = parseFloat(((pre.match(/\d[\d,]*/) || ['0'])[0]).replace(/,/g, '')) || 0;
+    var pre = m[1], suf = m[3], comma = /[, ]/.test(m[2]), dec = (m[2].split('.')[1] || '').length;
+    var from = parseFloat(((pre.match(/\d[\d, ]*/) || ['0'])[0]).replace(/[, ]/g, '')) || 0;
     if (from >= num) from = 0;
+    var loc = w.KT_LANG === 'uk' ? 'uk-UA' : 'en-US';
     var show = function (v) {
-      var str = comma ? v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toFixed(dec);
+      var str = comma ? v.toLocaleString(loc, { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toFixed(dec);
       txt.textContent = pre + str + suf;
     };
     txt.dataset.final = s;
@@ -1051,7 +1053,9 @@
     var id = '';
     try { id = (new URLSearchParams(w.location.search).get('id') || '').trim(); } catch (e) { id = ''; }
     var c = getCase(id);
-    if (c && c.hidden && id !== 'template') c = null; // dropped cases: designed "no such track" state
+    // dropped cases: designed "no such track" state; the template opens only on a local server
+    var local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(w.location.hostname);
+    if (c && c.hidden && !(id === 'template' && local)) c = null;
     var root = d.getElementById('case') || d.getElementById('main');
     if (!hasAnchor()) toTop();
     applyTheme(c ? themeOf(id) : 'paper');
@@ -1065,7 +1069,6 @@
       setMeta('meta[name="description"]', desc);
       setMeta('meta[property="og:title"]', d.title);
       setMeta('meta[property="og:description"]', desc);
-      if (isImg(c.cover)) setMeta('meta[property="og:image"]', c.cover.src);
       root.setAttribute('aria-labelledby', 'case-title');
       safe('header', function () { root.appendChild(renderHeader(c, id, code)); });
       safe('blocks', function () { var b = renderBlocks(c, code); if (b) root.appendChild(b); });

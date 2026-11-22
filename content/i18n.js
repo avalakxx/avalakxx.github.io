@@ -51,6 +51,15 @@
 
   if (lang === 'uk' && w.SITE && w.SITE_UK) {
     try { w.SITE = merge(w.SITE, w.SITE_UK); } catch (e) { /* keep English */ }
+    // Ukrainian groups thousands with a space: "2,000+" -> "2 000+" (no-break space). Paths and links are left alone.
+    var SKIP = { src: 1, poster: 1, href: 1, url: 1 };
+    var nb = function (v, k) {
+      if (typeof v === 'string') return SKIP[k] ? v : v.replace(/(\d),(?=\d{3}(?!\d))/g, '$1 ');
+      if (Array.isArray(v)) return v.map(function (x) { return nb(x); });
+      if (isObj(v)) { var o = {}; Object.keys(v).forEach(function (key) { o[key] = nb(v[key], key); }); return o; }
+      return v;
+    };
+    try { w.SITE = nb(w.SITE); } catch (e) { /* keep as is */ }
   }
 
   d.documentElement.lang = lang;

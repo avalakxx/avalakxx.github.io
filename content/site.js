@@ -240,7 +240,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
       cover: { type: 'image', src: 'assets/img/cases/vinyl/cover.webp', poster: '', alt: 'A wall of Echo Hits product cards on Prom.ua, one circled in blue pencil', ratio: '16/10', slot: '', spec: '' },
       blocks: [
         {
-          type: 'text', label: 'THE BRIEF', heading: 'Thousands of records, one person, one afternoon.',
+          type: 'text', label: 'THE BRIEF', heading: 'Thousands of records, one person, one evening.',
           body: [
             'Echo UA and Echo Hits, the vinyl-only shop, sell on the Prom.ua marketplace. Every record needs a full product card in two languages, Ukrainian and Russian: title, characteristics, description, tracklist, photos. All of it was done by hand.',
             'There was no content automation at all. I built the shops’ first system from scratch, part-time, from March 2024.'
@@ -842,7 +842,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
 
   contact: {
     label: '07 — CONTACT',
-    titleLines: ['GOT A BRIEF?', "LET'S MAKE THE CUT."],
+    titleLines: ['GOT A BRIEF?', 'LET’S MAKE THE CUT.'],
     body: 'I am looking to bring this mix of content and automation to a larger content team. Remote works. Write to me — email or Telegram, whichever is faster for you.',
     links: [
       { label: 'Email', value: 'tertychnyiklim@gmail.com', url: 'mailto:tertychnyiklim@gmail.com' },

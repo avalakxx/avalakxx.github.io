@@ -93,8 +93,11 @@
   padding-top: clamp(28px, 3vw, 52px);
 }
 .hero__role { font-size: clamp(30px, 3.3vw, 56px); line-height: 1; letter-spacing: -.035em; max-width: 20ch; }
-.hero__level { line-height: 1.6; max-width: 56ch; }
-.hero__lv { white-space: nowrap; }
+/* separators are drawn before each item; the container clips the one that lands at the start of a wrapped line */
+.hero__level { line-height: 1.6; max-width: 56ch; display: flex; flex-wrap: wrap; margin-left: -1.8em; clip-path: inset(-.5em -.5em -.5em 1.8em); }
+.hero__lv { white-space: nowrap; position: relative; margin-left: 1.8em; }
+.hero__lv::before { content: '·'; position: absolute; left: -1.15em; color: var(--fg-2); }
+.hero__level .hero__sep { display: none; }
 .hero__lv--on { color: var(--accent); }
 .hero__sep { color: var(--fg-2); }
 .hero__sub { max-width: 46ch; }
@@ -129,7 +132,9 @@
   .hero__shot { grid-column: 2; grid-row: 2 / 5; margin-top: 14px; }
   .hero__role { grid-column: 1; grid-row: 2; align-self: start; margin-top: 18px; font-size: clamp(20px, 5.7vw, 24px); line-height: 1.08; letter-spacing: -.025em; }
   .hero__level { grid-column: 1; grid-row: 3; align-self: start; margin-top: 12px; font-size: 10.5px; line-height: 1.5; }
-  .hero__lv { display: block; white-space: normal; }
+  .hero__level { display: block; margin-left: 0; clip-path: none; }
+  .hero__lv { display: block; white-space: normal; margin-left: 0; }
+  .hero__lv::before { content: none; }
   .hero__sep { display: none; }
   .hero__actions { grid-column: 1 / -1; grid-row: 5; width: 100%; margin-top: 18px; }
   .hero__sub { grid-column: 1 / -1; grid-row: 6; margin-top: 18px; }
@@ -203,6 +208,7 @@
   color: var(--fg);
   transition: background-color .25s, color .25s, border-color .25s;
 }
+.briefs__tab { text-transform: uppercase; }
 .briefs__tab:hover { border-color: var(--fg); }
 .briefs__tab[aria-selected="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .briefs__tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -413,7 +419,8 @@
 }
 @media (max-width: 767px) {
   .side__meta { grid-column: 1 / span 3; }
-  .disc { grid-column: 4 / -1; }
+  /* keep the disc inside its own column so it never runs into the pencil note */
+  .disc { grid-column: 4 / -1; width: min(100%, 96px); }
 }
 
 /* floating cover preview */

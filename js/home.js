@@ -400,7 +400,7 @@
         var dec = s.num % 1 ? 1 : 0;
         var show = function (n) {
           n = dec ? n : Math.round(n);
-          var str = n >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: dec, minimumFractionDigits: dec }) : n.toFixed(dec);
+          var str = n >= 1000 ? n.toLocaleString(window.KT_LANG === 'uk' ? 'uk-UA' : 'en-US', { maximumFractionDigits: dec, minimumFractionDigits: dec }) : n.toFixed(dec);
           val.textContent = (s.prefix || '') + str + (s.suffix || '');
         };
         // ranges like "30–50" count up from their lower bound

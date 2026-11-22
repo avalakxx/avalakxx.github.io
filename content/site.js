@@ -268,7 +268,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
             { name: 'APPROVE', tool: 'n8n + Telegram', desc: 'One run takes about 10–15 minutes: n8n executes the generator, builds the feed and sends a report to the Telegram bot. The feed goes live only after I tap Approve.' },
             { name: 'PUBLISH', tool: 'Prom.ua', desc: 'Once approved, Prom.ua imports the feed by URL and pulls the photos itself.' }
           ],
-          media: { type: 'image', src: 'assets/img/cases/vinyl/n8n-workflow.webp', poster: '', alt: 'The n8n workflow behind one feed run', ratio: '1440/700', slot: '', spec: '' }
+          media: { type: 'image', src: 'assets/img/cases/vinyl/n8n-workflow.webp', poster: '', alt: 'The n8n workflow behind one feed run', ratio: '1400/560', slot: '', spec: '' }
         },
         {
           type: 'prompt', label: 'PROMPT RECEIPT', tool: 'Claude Sonnet via API (prompt translated from Ukrainian)',

@@ -760,8 +760,7 @@
     var header = KT.h('header', { class: 'nav', id: 'site-header', 'data-theme': 'paper' });
 
     var brand = KT.h('a', { class: 'nav__brand', href: home ? '#top' : 'index.html', 'aria-label': KT.t('nav.home', null, { name: p.name || 'KT' }) },
-      KT.h('span', { class: 'nav__mono', text: p.short || 'KT' }),
-      p.name ? KT.h('span', { class: 'nav__name', text: p.name }) : null
+      KT.h('span', { class: 'nav__name', text: p.name || 'Klim Tertychnyi' })
     );
 
     var list = KT.h('ul');
@@ -795,7 +794,7 @@
       p.cv ? KT.h('a', { href: p.cv, download: '', text: KT.t('cv.download') }) : null,
       KT.langSwitch('menu__lang')
     );
-    menu.append(KT.h('div', { class: 'menu__top' }, KT.h('span', { class: 'nav__mono', text: p.short || 'KT' }), closeBtn), mlist, mfoot);
+    menu.append(KT.h('div', { class: 'menu__top' }, KT.h('span', { class: 'nav__name', text: p.name || 'Klim Tertychnyi' }), closeBtn), mlist, mfoot);
     d.body.appendChild(menu);
 
     var lastFocus = null;

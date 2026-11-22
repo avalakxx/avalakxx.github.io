@@ -302,7 +302,7 @@ a.nav__status:hover { color: var(--accent); }
 .menu__lang { margin-top: 8px; }
 
 @media (max-width: 1199px) { .nav__status { display: none; } }
-@media (min-width: 1024px) and (max-width: 1279px) { .nav__name { display: none; } }
+@media (min-width: 1024px) and (max-width: 1279px) { .nav__counter { display: none; } }
 @media (max-width: 1023px) { .nav__lang { display: none; } }
 @media (max-width: 1023px) {
   .nav { grid-template-columns: auto 1fr auto; }
@@ -311,7 +311,7 @@ a.nav__status:hover { color: var(--accent); }
   .nav__counter { grid-column: 2; }
   .nav__menu-btn { display: inline-flex; }
 }
-@media (max-width: 479px) { .nav__name, .nav__menu-txt { display: none; } }
+@media (max-width: 479px) { .nav__menu-txt { display: none; } }
 
 /* ------------------------------------------------------------ mobile menu */
 .menu {

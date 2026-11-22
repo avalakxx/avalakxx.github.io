@@ -48,7 +48,7 @@ window.SITE = {
     // Display line: the name. One row on desktop, two stacked rows on phones; fit to width.
     titleLines: ['KLIM', 'TERTYCHNYI'],
     role: 'AI Content Producer & Content Automation',
-    level: 'MIDDLE · 2 YRS COMMERCIAL GEN-AI · UKRAINE / REMOTE · OPEN TO WORK', // ' · ' splits the items
+    level: '2 YRS COMMERCIAL GEN-AI · UKRAINE / REMOTE · OPEN TO WORK', // ' · ' splits the items
     sub: 'I make AI images, video and copy for social and ads, and build the pipelines that ship them: 2,000+ products automated, 40+ qualified B2B leads.',
     tagline: 'I set the brief. Machines shoot the takes. I pick the cut.', // pencil caption by the portrait
     ctaWork: 'See the work',
@@ -75,7 +75,7 @@ window.SITE = {
     statement: 'Generating is the easy part. *Choosing* is the job.',
     body: [
       'I have worked hands-on with generative AI since 2023. For the last two years I have used it in commercial work for a web development agency, a record label and the vinyl shops Echo UA & Echo Hits: images, video, voice and copy for social media and ads.',
-      'I also build the plumbing. I made the vinyl shops’ content pipeline from scratch, and my own video editing is automated with Claude Code. I write the brief, the machine assembles the cut, and I review it.'
+      'I also build the plumbing. I made the vinyl shops’ content pipeline from scratch, and I am now scripting the repetitive parts of my own video editing with Claude Code.'
     ],
     toy: {
       title: 'DIRECT THE SHOT',
@@ -116,7 +116,7 @@ window.SITE = {
       id: 'wpwp', track: 'A1', side: 'A',
       title: 'Leads on an AI-first content stack',
       client: 'wpwp.bz', clientNote: 'WordPress & WooCommerce development agency',
-      oneLiner: 'Fixed-price offers and an organic content series that brought a web agency 40+ qualified B2B leads from small and medium businesses.',
+      oneLiner: 'An ad campaign of three fixed-price offer Reels that brought a web agency 40+ qualified B2B leads from small and medium businesses in about three weeks.',
       year: '2025–26',
       role: 'Marketing & AI Content Creator (SMM)',
       // home track card: ROLE · role · team · period
@@ -177,12 +177,12 @@ window.SITE = {
         {
           type: 'text', label: 'THE CAMPAIGN', heading: 'Fixed prices for small and medium businesses.',
           body: [
-            'Three fixed-price offers went out as full creative packs: a landing page for $150, a multi-page site for $300 and an online store for $450. They were aimed at small and medium businesses. I made the creatives; the paid placement on Meta was run by a colleague.',
-            'Alongside, the organic Black Friday series fed a free 10-second check of a store. Within about three weeks of launch it brought 40+ qualified leads, and it kept bringing them in after I left the agency. A lead counted as qualified only once it reached a call and the agency took the request on.'
+            'The agency’s last ad campaign was three Reels, one per fixed-price offer: a landing page for $150, a multi-page site for $300 and an online store for $450, aimed at small and medium businesses. I made the creatives; the paid placement on Meta was run by a colleague.',
+            'Within about three weeks of launch the campaign brought 40+ qualified leads, and it kept bringing them in after I left the agency. The $150 landing Reel did the most work. A lead counted as qualified only once it reached a call and the agency took the request on. Alongside, I ran the agency’s organic feed, including the bilingual Black Friday series.'
           ]
         },
         {
-          type: 'metrics', label: 'RESULT', items: [{ value: '40+', label: 'qualified B2B leads' }, { value: '3', label: 'fixed-price offer packs' }, { value: '~12', label: 'bilingual posts in about 4 days (Black Friday series)' }, { value: '2', label: 'languages, EN + UA' }] },
+          type: 'metrics', label: 'RESULT', items: [{ value: '40+', label: 'qualified B2B leads' }, { value: '3', label: 'offer Reels in the campaign' }, { value: '~12', label: 'bilingual posts in about 4 days (Black Friday series)' }, { value: '2', label: 'languages, EN + UA' }] },
         {
           type: 'credits',
           items: [
@@ -290,7 +290,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
             'Duplicates are caught before generation, against the catalogue snapshot. And a human stays in the loop: every run ends with a report in Telegram, and the feed goes live only after I tap Approve.'
           ]
         },
-        { type: 'metrics', label: 'RESULT', items: [{ value: '2,000+', label: 'products through the pipeline' }, { value: '50–100', label: 'records in one ~15-minute feed run; by hand, 10–15 minutes per card' }, { value: 'Hundreds of hours', label: 'of manual work saved' }, { value: 'Thousands of $', label: 'saved in operating costs' }] },
+        { type: 'metrics', label: 'RESULT', items: [{ value: '2,000+', label: 'products through the pipeline' }, { value: '50–100', label: 'records in one ~15-minute feed run; by hand, 10–15 minutes per card' }, { value: '330–500', label: 'hours of manual work saved (est., 2,000 cards × 10–15 min)' }, { value: '4 → 8', label: 'characteristic fields per card' }] },
         {
           type: 'credits',
           items: [
@@ -464,7 +464,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
       role: 'Designer (AI-assisted), part-time',
       card: { role: 'Design', team: 'solo', period: '2026' },
       tags: ['DESIGN', 'PRINT', 'CLAUDE CODE'],
-      tools: ['Claude Code'],
+      tools: ['Claude Code', 'Higgsfield'],
       result: { value: '13', label: 'versions to the print-ready file' },
       cover: { type: 'image', src: 'assets/img/cases/tilkytak/cover.webp', poster: '', alt: 'TILKYTAK gift certificate, front and back, in a mockup scene', ratio: '16/10', slot: '', spec: '' },
       blocks: [
@@ -472,7 +472,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
           type: 'text', label: 'THE BRIEF', heading: 'Pretty is not the same as printable.',
           body: [
             'TILKYTAK Records, a record label, needed a gift certificate worth 3,000 UAH: A6 landscape, 148×105 mm, two sides, built from the identity of the label’s own site: its fonts, its colours, its grid. The QR code and the promo code were not ready yet, so the first version left white placeholders for both.',
-            'I art-directed and iterated the design in Claude Code, then had it converted to a print-ready CMYK PDF with bleed and outlined text. I also prepare artists’ artwork for the label’s production: technical fixes and layout adaptation.'
+            'I art-directed and iterated the design in Claude Code, then had it converted to a print-ready CMYK PDF with bleed and outlined text. The mockup imagery came from Higgsfield. This is one small project: since March 2024 I have taken on design tasks alongside the label’s main designer, from release covers to preparing artists’ artwork for production.'
           ]
         },
         {
@@ -526,7 +526,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
           items: [
             { k: 'Role', v: 'Designer (AI-assisted), part-time' },
             { k: 'Client', v: 'TILKYTAK Records (ТІЛЬКИТАК), record label' },
-            { k: 'Period', v: 'Nov 2026' },
+            { k: 'Period', v: 'Nov 2026 (one project; designing for the label since Mar 2024)' },
             { k: 'Tools', v: 'Claude Code, Higgsfield' }
           ]
         }
@@ -739,7 +739,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
         name: 'Automation & AI coding',
         items: [
           { name: 'n8n', use: 'Content pipelines, publishing' },
-          { name: 'Claude Code', use: 'Automated video editing, scripts' },
+          { name: 'Claude Code', use: 'Pipelines, scripts, design iterations' },
           { name: 'Codex', use: 'AI coding assistant' }
         ]
       },
@@ -775,7 +775,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
         points: [
           'Built the company’s first content automation system from scratch.',
           'Turned manual listing into a batch pipeline that prepares and publishes content for 2,000+ products on Prom.ua.',
-          'Saved hundreds of hours of manual work and thousands of dollars in operating costs.'
+          'Saved an estimated 330–500 hours of manual work across 2,000 cards; cards grew from 4 to 8 characteristic fields.'
         ]
       },
       {
@@ -783,6 +783,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
         org: 'TILKYTAK Records (ТІЛЬКИТАК)', orgNote: 'Record label',
         period: 'Mar 2024 – present', type: 'part-time',
         points: [
+          'Took on design tasks alongside the label’s main designer: release covers, artwork and print materials.',
           'Designed a print-ready gift certificate with Claude Code (13 versions, CMYK print files); Higgsfield for presentation imagery.',
           'Prepared artists’ artwork for production: technical fixes and layout adaptation.'
         ]

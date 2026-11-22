@@ -424,7 +424,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
           type: 'text', label: 'THE CAMPAIGN', heading: '21M+ views turned into 5,000+ listeners.',
           body: [
             'The meme page was the promo campaign for Soundsystem: every Reel was set to their music. Zero ad budget, just memes and editing.',
-            'In about two months it brought the project 5,000+ new listeners (listener growth in Spotify for Artists) and became the best advertising the project ever had.'
+            'In about two months it brought the project 5,000+ new listeners (listener growth in Spotify for Artists) and became the best advertising the project ever had. The track I was promoting then, Soundsystem — Slightly’Changed, now has 140,000 streams on Spotify.'
           ]
         },
         {
@@ -439,7 +439,7 @@ Reply STRICTLY in JSON (no text outside the JSON, no \`\`\`), with the keys:
         },
         {
           type: 'metrics', label: 'RESULT',
-          items: [{ value: '16M', label: 'views on the top Reel, 21M+ across the top three' }, { value: '5,000+', label: 'new Spotify listeners (Spotify for Artists), zero ad budget' }, { value: '10+', label: 'albums released' }, { value: 'Several thousand $', label: 'revenue: streaming, YouTube, US commissions' }]
+          items: [{ value: '16M', label: 'views on the top Reel, 21M+ across the top three' }, { value: '5,000+', label: 'new Spotify listeners (Spotify for Artists), zero ad budget' }, { value: '10+', label: 'albums released' }, { value: '140K', label: 'Spotify streams on Soundsystem — Slightly’Changed, the track the campaign promoted' }]
         },
         {
           type: 'credits',

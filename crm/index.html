@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lead Desk · mini CRM</title>
+<meta name="description" content="Lead Desk: a mini CRM with a sales pipeline, client cards and Telegram notifications. Python + SQLite, built with Claude Code.">
+<meta name="theme-color" content="#F4F4F1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316161A'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ELD%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tg.css">
+<link rel="stylesheet" href="app.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">LD</span>
+      <div><b>Lead Desk</b><small>Oak &amp; Line kitchens</small></div>
+    </div>
+    <nav aria-label="Main">
+      <a class="active" href="./" aria-current="page">Pipeline</a>
+      <a href="form.html" target="_blank" rel="noopener">Website form <span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="side-foot">
+      <div class="tg" id="tgStatus"><span class="dot" aria-hidden="true"></span><span class="tg-label">Telegram</span></div>
+      <div class="mode" id="modeBadge" hidden></div>
+    </div>
+  </aside>
+
+  <main>
+    <header class="top">
+      <div>
+        <h1>Pipeline</h1>
+        <p class="sub" id="today"></p>
+      </div>
+      <div class="actions">
+        <input id="search" type="search" placeholder="Search by name, phone, service" aria-label="Search leads" autocomplete="off">
+        <button class="btn primary" id="newBtn" type="button">+ New lead</button>
+      </div>
+    </header>
+
+    <section class="kpis" id="kpis" aria-label="Key numbers"></section>
+    <section class="board" id="board" aria-label="Sales pipeline">
+      <div class="loading">Loading leads…</div>
+    </section>
+  </main>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle" aria-hidden="true"></aside>
+
+<dialog id="newDialog" aria-labelledby="newTitle">
+  <form id="newForm" method="dialog" novalidate>
+    <header class="dlg-head">
+      <h2 id="newTitle">New lead</h2>
+      <button class="icon" type="button" data-cancel aria-label="Close">×</button>
+    </header>
+    <div class="grid2">
+      <label class="field"><span class="label">Name</span><input name="name" required maxlength="100" autocomplete="off"></label>
+      <label class="field"><span class="label">Phone</span><input name="phone" type="tel" required pattern="[0-9+\(\)\-\s]{6,24}" placeholder="+48 500 000 000"></label>
+      <label class="field"><span class="label">Email <i>optional</i></span><input name="email" type="email" maxlength="120"></label>
+      <label class="field"><span class="label">Service</span>
+        <select name="service"><option>Kitchen</option><option>Wardrobe</option><option>Bathroom</option><option>Full interior</option><option>Other</option></select>
+      </label>
+      <label class="field"><span class="label">Budget, €</span><input name="budget" type="number" min="0" step="100" inputmode="numeric" placeholder="12000"></label>
+      <label class="field wide"><span class="label">What they need</span><textarea name="message" rows="3" maxlength="1000" placeholder="Size, materials, deadline…"></textarea></label>
+    </div>
+    <p class="form-error" id="newError" role="alert" hidden></p>
+    <footer class="dlg-foot">
+      <button class="btn" type="button" data-cancel>Cancel</button>
+      <button class="btn primary" type="submit">Add lead</button>
+    </footer>
+  </form>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+</body>
+</html>
